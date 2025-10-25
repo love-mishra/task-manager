@@ -2,8 +2,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# copy project files and restore + publish
-COPY ./backend/* ./backend/
+# copy all repository files into the container (build context is repo root)
+COPY . .
+
+# build/publish the backend project located in ./backend
 WORKDIR /src/backend
 RUN dotnet restore
 RUN dotnet publish -c Release -o /app/publish
