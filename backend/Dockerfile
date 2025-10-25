@@ -1,17 +1,15 @@
-# backend/Dockerfile — build + runtime for .NET 8 app (explicit csproj path)
-ARG BACKEND_PROJECT=backend/TaskManagerApi.csproj
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# copy repository contents
+# copy repository contents (context = repo root)
 COPY . .
 
-# Build and publish the specified backend project
-WORKDIR /src
-RUN if [ -f "$BACKEND_PROJECT" ]; then echo "Using project: $BACKEND_PROJECT"; else echo "ERROR: project $BACKEND_PROJECT not found"; exit 1; fi
-RUN dotnet restore "$BACKEND_PROJECT"
-RUN dotnet publish "$BACKEND_PROJECT" -c Release -o /app/publish
+# Ensure we use the correct project file
+RUN echo "Using project: backend/TaskManagerApi.csproj"
+
+# Restore & publish the backend project
+RUN dotnet restore "backend/TaskManagerApi.csproj"
+RUN dotnet publish "backend/TaskManagerApi.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
