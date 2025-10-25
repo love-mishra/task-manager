@@ -1,8 +1,8 @@
-# Dockerfile in repo root (task-manager/)
+# Dockerfile at repo root
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy entire repo (frontend ignored by .dockerignore)
+# Copy everything (frontend ignored by .dockerignore)
 COPY . .
 
 WORKDIR /src/backend
