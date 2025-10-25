@@ -1,20 +1,25 @@
-# backend/Dockerfile — build + runtime for .NET 8 app
+# backend/Dockerfile — build + runtime for .NET 8 app (explicit csproj path)
+ARG BACKEND_PROJECT=backend/TaskManagerApi.csproj
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# copy all repository files into the container (build context is repo root)
+# copy repository contents
 COPY . .
 
-# build/publish the backend project located in ./backend
-WORKDIR /src/backend
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+# Build and publish the specified backend project
+WORKDIR /src
+RUN if [ -f "$BACKEND_PROJECT" ]; then echo "Using project: $BACKEND_PROJECT"; else echo "ERROR: project $BACKEND_PROJECT not found"; exit 1; fi
+RUN dotnet restore "$BACKEND_PROJECT"
+RUN dotnet publish "$BACKEND_PROJECT" -c Release -o /app/publish
 
-# runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-# Use the PORT env provided by Render; fallback to 5000
+
+# ensure ASP.NET listens on the PORT Render provides
 ENV ASPNETCORE_URLS=http://+:${PORT:-5000}
 EXPOSE ${PORT:-5000}
+
+# run the published dll (assembly name matches project name by default)
 ENTRYPOINT ["dotnet", "TaskManagerApi.dll"]
