@@ -1,23 +1,23 @@
+# backend/Dockerfile — copy only the backend folder to avoid context ignore issues
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# copy repository contents (context = repo root)
-COPY . .
+# copy only backend folder (preserves structure at /src/backend)
+COPY backend/ ./backend/
 
-# Ensure we use the correct project file
-RUN echo "Using project: backend/TaskManagerApi.csproj"
+# debug: list files copied (appears in Render logs)
+RUN echo "=== /src contents ===" && ls -la /src || true
+RUN echo "=== /src/backend contents ===" && ls -la /src/backend || true
 
-# Restore & publish the backend project
-RUN dotnet restore "backend/TaskManagerApi.csproj"
-RUN dotnet publish "backend/TaskManagerApi.csproj" -c Release -o /app/publish
+# Restore & publish the backend project explicitly
+RUN dotnet restore "/src/backend/TaskManagerApi.csproj"
+RUN dotnet publish "/src/backend/TaskManagerApi.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# ensure ASP.NET listens on the PORT Render provides
 ENV ASPNETCORE_URLS=http://+:${PORT:-5000}
 EXPOSE ${PORT:-5000}
 
-# run the published dll (assembly name matches project name by default)
 ENTRYPOINT ["dotnet", "TaskManagerApi.dll"]
