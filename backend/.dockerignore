@@ -1,3 +1,4 @@
+# keep Docker context small
 frontend/node_modules
 frontend/dist
 **/.git
@@ -5,3 +6,4 @@ frontend/dist
 **/.DS_Store
 *.log
 .env
+# DO NOT ignore backend
