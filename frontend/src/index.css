@@ -1,160 +1,103 @@
-/* src/index.css - polished light/dark theme + layout */
-:root{
-  --bg: #f6f7fb;
-  --text: #0f1724;
-  --muted: #6b7280;
-  --card: #ffffff;
-  --border: #e6e9ef;
-  --accent: #7c3aed;
-  --accent-contrast: #fff;
-  --danger: #ef4444;
-  --shadow: 0 6px 18px rgba(18, 23, 38, 0.06);
-  --radius: 12px;
-  --gap: 12px;
-}
+/* Tailwind base, components, utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-[data-theme="dark"]{
-  --bg: #0b1220;
-  --text: #e6eef8;
-  --muted: #9aa7bd;
-  --card: #071123;
-  --border: rgba(255,255,255,0.06);
-  --accent: #8b5cf6;
-  --accent-contrast: #071123;
-  --danger: #f97316;
-  --shadow: 0 10px 30px rgba(2,6,23,0.6);
-}
+/* ---------------------- Custom styles ---------------------- */
 
-/* Layout */
-* { box-sizing: border-box; }
-html,body,#root { height: 100%; }
-body{
-  margin: 0;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.06), transparent 10%), var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  transition: background 250ms ease, color 200ms ease;
-  padding: 36px 16px;
-  display: flex;
-  justify-content: center;
+/* Body background and text for dark mode */
+body {
+  @apply bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-100;
 }
-
-/* Container */
+/* Card container */
 .app {
-  width: 100%;
-  max-width: 820px;
+  @apply min-h-screen flex items-center justify-center p-4 bg-gray-100 dark:bg-gray-900;
 }
 
-/* Card */
 .card {
-  background: linear-gradient(180deg, var(--card), var(--card));
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 22px;
-  border: 1px solid var(--border);
+  @apply w-full max-w-xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 flex flex-col gap-4;
 }
 
-/* Header */
+/* Header section */
 .header {
-  display:flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  @apply flex justify-between items-center mb-4;
 }
+
 .title {
-  display:flex;
-  gap: 12px;
-  align-items:center;
+  @apply flex items-center gap-4;
 }
+
 .logo {
-  width:44px; height:44px; border-radius:10px;
-  background: linear-gradient(135deg, var(--accent), #6d28d9);
-  display:flex;align-items:center;justify-content:center;color:var(--accent-contrast);
-  font-weight:700; box-shadow: 0 6px 18px rgba(124,58,237,0.12);
-  flex-shrink:0;
+  @apply font-bold text-xl w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white;
 }
-h1 { margin:0; font-size:20px; letter-spacing: -0.2px; }
-.sub { font-size:13px; color:var(--muted); }
+
+.sub {
+  @apply text-gray-500 dark:text-gray-300 text-sm;
+}
 
 /* Controls */
-.controls { display:flex; gap:8px; align-items:center; }
+.controls {
+  @apply flex items-center gap-2;
+}
 
+.icon-btn {
+  @apply p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors;
+}
+
+.icon-btn.ghost {
+  @apply bg-transparent border border-gray-300 dark:border-gray-600;
+}
+
+/* Input row */
 .input-row {
-  display:flex;
-  gap: 8px;
-  margin-bottom: 14px;
+  @apply flex gap-2 mb-2;
 }
-.input {
-  flex:1;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  outline: none;
-  box-shadow: none;
-  transition: box-shadow 160ms ease, border-color 160ms ease;
-}
-.input:focus { box-shadow: 0 6px 18px rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.28); }
 
-.btn {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: none;
-  cursor:pointer;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  font-weight:600;
-  box-shadow: 0 6px 18px rgba(124,58,237,0.12);
-  transition: transform 120ms ease, opacity 120ms;
+.input {
+  @apply flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500;
+
+  /* Explicitly set text color for dark mode */
+  @apply text-gray-800 dark:text-gray-100;
+  background-color: white; /* light mode */
+  @apply dark:bg-gray-700; /* dark mode background */
 }
-.btn:active { transform: translateY(1px); }
-.ghost {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
+.btn {
+  @apply px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors;
+}
+
+/* Task list */
+.task-list {
+  @apply flex flex-col gap-2;
 }
 
 /* Filters */
-.filters { display:flex; gap:8px; margin-bottom:12px; }
+.filters {
+  @apply flex gap-2;
+}
+
 .filter-btn {
-  padding:6px 10px; border-radius:8px; border:1px solid var(--border);
-  background:transparent; color:var(--muted); font-weight:600; cursor:pointer;
-}
-.filter-btn.active { color:var(--accent); border-color: rgba(124,58,237,0.12); background: rgba(124,58,237,0.03); }
-
-/* Task list styling */
-.task-list { margin-top: 6px; }
-.task {
-  display:flex; gap:12px; align-items:center;
-  padding: 12px; border-radius:10px;
-  border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-  margin-bottom:10px;
-}
-.task .desc { flex:1; word-break:break-word; }
-.task .desc.completed { text-decoration: line-through; color: var(--muted); }
-.small {
-  font-size:12px; color:var(--muted);
+  @apply px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors;
 }
 
-/* Icon buttons */
-.icon-btn {
-  background: transparent; border: none; cursor: pointer; padding:6px; border-radius:8px;
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+.filter-btn.active {
+  @apply bg-blue-500 text-white border-transparent;
 }
-.icon-btn:hover { background: rgba(0,0,0,0.03); }
 
-/* footer */
+/* Footer */
 .footer {
-  display:flex; justify-content:space-between; align-items:center; margin-top:14px; color:var(--muted); font-size:13px;
+  @apply flex justify-between items-center mt-4 text-sm text-gray-500 dark:text-gray-300;
 }
 
-/* responsive */
-@media (max-width:520px){
-  .header { flex-direction: column; align-items: flex-start; gap:10px; }
-  .input-row { flex-direction:column; }
-  .btn { width:100%; }
+/* Delete button */
+button.delete-icon {
+  @apply text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors;
+}
+.input::placeholder {
+  @apply text-gray-400 dark:text-gray-300;
+}
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .card {
+    @apply p-4;
+  }
 }
